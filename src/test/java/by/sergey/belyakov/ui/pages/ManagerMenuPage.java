@@ -1,4 +1,4 @@
-package by.sergey.belyakov.ui.manager;
+package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -17,7 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
-public class ManagerMenu {
+public class ManagerMenuPage {
 
 	private WebDriver driver;
 	private WebDriverWait wait;
@@ -26,7 +26,7 @@ public class ManagerMenu {
 	private By createTaskButton = By.xpath("//a[@href='newIssue' and text()='Новая задача']");
 	private By issuesListLink = By.xpath("//a[@href='issues']");
 
-	public ManagerMenu(WebDriver driver) {
+	public ManagerMenuPage(WebDriver driver) {
 		this.driver = driver;
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(7));
 	}
@@ -34,8 +34,6 @@ public class ManagerMenu {
 	public void clickCreate() {
 		WebElement button = wait.until(ExpectedConditions.elementToBeClickable(createButton));
 		button.click();
-		log.info("Нажимаем кнопку 'Создать'");
-		System.out.println("Нажимаем кнопку 'Создать'");
 	}
 
 	public boolean createButtonIsDisplayed() {
@@ -44,11 +42,10 @@ public class ManagerMenu {
 		} catch (Exception e) {
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
 			return false;
 		}
@@ -58,11 +55,8 @@ public class ManagerMenu {
 		try {
 			WebElement taskButton = wait.until(ExpectedConditions.elementToBeClickable(createTaskButton));
 			taskButton.click();
-			log.info("Нажимаем кнопку 'Новая задача'");
-			System.out.println("Нажимаем кнопку 'Новая задача'");
 		} catch (TimeoutException e) {
 			log.error("Опция 'Новая задача' не найдена", e);
-			System.err.println("Опция 'Новая задача' не найдена");
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 			try {
@@ -89,10 +83,8 @@ public class ManagerMenu {
 		}
 	}
 
-public void goToIssuesPage() {
-	WebElement link = wait.until(ExpectedConditions.elementToBeClickable(issuesListLink));
-	link.click();
-	System.out.println("Переходим на страницу задач");
-	log.info("Нажали кнопку перехода на 'Задачи'");
-}
+	public void goToIssuesPage() {
+		WebElement link = wait.until(ExpectedConditions.elementToBeClickable(issuesListLink));
+		link.click();
+	}
 }

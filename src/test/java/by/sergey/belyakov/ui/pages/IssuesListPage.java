@@ -1,4 +1,4 @@
-package by.sergey.belyakov.ui.issues;
+package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -21,10 +21,13 @@ public class IssuesListPage {
 
 	private WebDriver driver;
 	private WebDriverWait  wait;
+	private By moreOptionsButton = By.cssSelector("button[aria-label='Показать больше']");
+	private By deleteButtonLocator = By.xpath("//span[text()= 'Удалить задачу']");
+	private By confirmDeleteButton = By.xpath("//span[text()='Удалить']");
 
 	public IssuesListPage(WebDriver driver) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(12));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	}
 
 	private By issueRowByHeaderText(String header) {
@@ -41,9 +44,8 @@ public class IssuesListPage {
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
-			System.err.println("Задача с заголовком " + summary +   " отсутствует");
 			log.error("Задача с заголовком '{}' не найдена ", summary);
 			return false;
 		}
@@ -51,7 +53,7 @@ public class IssuesListPage {
 
 	public void deleteIssue(String header){
 		try {
-			WebElement row = wait.until(ExpectedConditions.
+		WebElement row = wait.until(ExpectedConditions.
 					visibilityOfElementLocated(issueRowByHeaderText(header)));
 
 						new Actions(driver).moveToElement(row).click().perform();
@@ -59,42 +61,30 @@ public class IssuesListPage {
 			String newTab = driver.getWindowHandles().toArray()[1].toString();
 			driver.switchTo().window(newTab);
 
-			WebElement moreOptionsButton = wait.until(ExpectedConditions.
-					visibilityOfElementLocated(By.cssSelector("button[aria-label='Показать больше']")));
+			WebElement moreOptions = wait.until(ExpectedConditions.
+					visibilityOfElementLocated(this.moreOptionsButton));
 
-			moreOptionsButton.click();
-
-			System.out.println("Все хорошо, задача выбрана и меню 'More options' открыто");
-			log.info("Задача выбрала и меню More Options появилось");
-
-			//FIXME БЕЗ ЭТОГО Actions не отрабатывает.
-			Thread.sleep(3000);
+			moreOptions.click();
 
 			WebElement deleteButton = wait.until(ExpectedConditions.
-					elementToBeClickable(By.xpath("//span[text()= 'Удалить задачу']")));
+					elementToBeClickable(deleteButtonLocator));
 
 				new Actions(driver).moveToElement(deleteButton).click().perform();
 
-			System.out.println("Нажали на кнопку удаления задачи");
-			log.info("Кликнули по кнопке удалить");
-
 			WebElement confirmDeleteTask = wait.until(ExpectedConditions.
-					elementToBeClickable(By.xpath("//span[text()='Удалить']")));
+					elementToBeClickable(confirmDeleteButton));
 
 			confirmDeleteTask.click();
 
-			System.out.println("Задача с заголовком "+ header +" успешно удалена");
-			log.info("Удаление задачи с заголовком'{}', завершено", header);
-
-		} catch (InterruptedException e) {
+		} catch (Exception ex) {
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
-			System.err.println("Ошибка при ожидании потоком");
+			log.error("Ошибка при ожидании потоком");
 		}
 	}
 }

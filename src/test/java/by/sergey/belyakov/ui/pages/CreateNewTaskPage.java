@@ -1,8 +1,7 @@
-package by.sergey.belyakov.ui.manager;
+package by.sergey.belyakov.ui.pages;
 
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -18,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Slf4j
 public class CreateNewTaskPage {
@@ -31,34 +31,15 @@ public class CreateNewTaskPage {
 
 	public CreateNewTaskPage(WebDriver driver) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	}
-
-	public void waitForPageLoad() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
-			}
-			Thread.currentThread().interrupt();
-		}
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	}
 
 	public void enterHeader(String text) {
 		try {
-			switchToNewTab(1);
 			WebElement header = wait.until(ExpectedConditions.visibilityOfElementLocated(headerField));
 			header.clear();
 			header.sendKeys(text);
-			log.info("Вводим заголовок задачи " + text);
-			System.out.println("Вводим заголовок задачи " + text);
 		} catch (TimeoutException e) {
-			waitForPageLoad();
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 			try {
@@ -76,17 +57,14 @@ public class CreateNewTaskPage {
 			field.click();
 			field.clear();
 			field.sendKeys(text);
-			log.info("Вводим описание задачи " + text);
-			System.out.println("Вводим описание задачи " + text);
 		} catch (TimeoutException e) {
-			System.err.println("Поле описания не доступно");
-			waitForPageLoad();
+			log.error("Поле описания не доступно");
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
 			throw new NoSuchElementException("Не удалось найти редактор описания", e);
 		}
@@ -95,38 +73,24 @@ public class CreateNewTaskPage {
 	public void clickCreate() {
 		WebElement button = wait.until(ExpectedConditions.elementToBeClickable(createButton));
 		button.click();
-		log.info("Нажимаем кнопку Создать");
-		System.out.println("Нажимаем кнопку Создать");
 	}
 
 	public void createTask(String header, String description) {
+		switchToNewTab(1);
 		enterHeader(header);
 		enterDescription(description);
 		clickCreate();
 	}
 
 	public void switchToNewTab(Integer index) {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
-			}
-		}
-
-		var windows = driver.getWindowHandles();
+		Set<String> windows = driver.getWindowHandles();
 		if (windows.size() < index + 1) {
 			TakesScreenshot screenshot = ((TakesScreenshot) driver);
 			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
 			throw new NoSuchElementException("Не открылась новая вкладка после клика");
 		}
@@ -134,9 +98,9 @@ public class CreateNewTaskPage {
 		String newTab = windows.toArray()[index].toString();
 		driver.switchTo().window(newTab);
 
+		wait.until(d -> !d.getCurrentUrl().equals("about:blank") && d.getTitle().length() > 0);
+
 		log.info("Переключились на новую вкладку: " + driver.getCurrentUrl());
-		System.out.println("Переключились на новую вкладку: " + driver.getCurrentUrl());
-		System.out.println("Текущий URL: " + driver.getCurrentUrl());
 	}
 }
 

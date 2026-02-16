@@ -1,4 +1,4 @@
-package by.sergey.belyakov.ui.authorization;
+package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -24,8 +24,8 @@ public class LoginPage {
 	private By usernameField = By.xpath("//input[@name='username']");
 	private By passwordField = By.xpath("//input[@name='password']");
 	private By loginButtonField = By.xpath("//button[@type='submit']");
-	private By registrationField = By.xpath("//span[text()='Регистрация']");
 	private By errorMessage = By.xpath("//div[contains(text(), 'Некорректное имя пользователя или пароль')]");
+	private By createButton = By.xpath("//span[text()='Создать']");
 
 
 	public LoginPage(WebDriver driver) {
@@ -37,20 +37,17 @@ public class LoginPage {
 		WebElement fieldUserName = wait.until(ExpectedConditions.elementToBeClickable(usernameField));
 		fieldUserName.clear();
 		fieldUserName.sendKeys(username);
-		System.out.println("Вводим логин " + username);
 	}
 
 	public void enterPassword(String password) {
 		WebElement fieldPassword = wait.until(ExpectedConditions.elementToBeClickable(passwordField));
 		fieldPassword.clear();
 		fieldPassword.sendKeys(password);
-		System.out.println("Вводим пароль " + password);
 	}
 
 	public void clickLoginButton() {
 		WebElement buttonLogin = wait.until(ExpectedConditions.elementToBeClickable(loginButtonField));
 		buttonLogin.click();
-		System.out.println("Нажимаем кнопку Войти");
 	}
 
 	public boolean login(String username, String password) {
@@ -58,7 +55,7 @@ public class LoginPage {
 		enterPassword(password);
 		clickLoginButton();
 		try {
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Создать']")));
+			wait.until(ExpectedConditions.elementToBeClickable(createButton));
 			return true;
 		} catch (Exception e) {
 			boolean errorAppeared = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).isDisplayed();
@@ -67,10 +64,10 @@ public class LoginPage {
 			try {
 				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
+				log.error(exception.getMessage());
 			}
 			if (errorAppeared) {
-				System.err.println("Обнаружено сообщение об ошибке: Некорректное имя пользователя или пароль.");
+				log.error("Обнаружено сообщение об ошибке: Некорректное имя пользователя или пароль.");
 				return false;
 			}
 		}
@@ -79,7 +76,7 @@ public class LoginPage {
 		try {
 			FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
 		} catch (IOException exception) {
-			System.err.println(exception.getMessage());
+			log.error(exception.getMessage());
 		}
 		throw new RuntimeException("Ошибка при попытке входа в систему!");
 	}
