@@ -1,14 +1,20 @@
 package by.sergey.belyakov.ui.issues;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class IssuesListPage {
@@ -18,7 +24,7 @@ public class IssuesListPage {
 
 	public IssuesListPage(WebDriver driver) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(7));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(12));
 	}
 
 	private By issueRowByHeaderText(String header) {
@@ -30,6 +36,13 @@ public class IssuesListPage {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(issueRowByHeaderText(summary)));
 			return true;
 		} catch (Exception e) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			System.err.println("Задача с заголовком " + summary +   " отсутствует");
 			log.error("Задача с заголовком '{}' не найдена ", summary);
 			return false;
@@ -38,7 +51,6 @@ public class IssuesListPage {
 
 	public void deleteIssue(String header){
 		try {
-
 			WebElement row = wait.until(ExpectedConditions.
 					visibilityOfElementLocated(issueRowByHeaderText(header)));
 
@@ -75,6 +87,13 @@ public class IssuesListPage {
 			log.info("Удаление задачи с заголовком'{}', завершено", header);
 
 		} catch (InterruptedException e) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			System.err.println("Ошибка при ожидании потоком");
 		}
 	}

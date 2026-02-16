@@ -1,13 +1,19 @@
 package by.sergey.belyakov.ui.authorization;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class LoginPage {
@@ -47,12 +53,6 @@ public class LoginPage {
 		System.out.println("Нажимаем кнопку Войти");
 	}
 
-	public void clickRegistrationLink() {
-		WebElement link = wait.until(ExpectedConditions.elementToBeClickable(registrationField));
-		link.click();
-		System.out.println("Переходим на страницу регистрации");
-	}
-
 	public boolean login(String username, String password) {
 		enterUsername(username);
 		enterPassword(password);
@@ -62,10 +62,24 @@ public class LoginPage {
 			return true;
 		} catch (Exception e) {
 			boolean errorAppeared = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).isDisplayed();
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			if (errorAppeared) {
 				System.err.println("Обнаружено сообщение об ошибке: Некорректное имя пользователя или пароль.");
 				return false;
 			}
+		}
+		TakesScreenshot screenshot = ((TakesScreenshot) driver);
+		File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+		} catch (IOException exception) {
+			System.err.println(exception.getMessage());
 		}
 		throw new RuntimeException("Ошибка при попытке входа в систему!");
 	}

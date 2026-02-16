@@ -3,15 +3,21 @@ package by.sergey.belyakov.ui.manager;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class CreateNewTaskPage {
@@ -25,13 +31,20 @@ public class CreateNewTaskPage {
 
 	public CreateNewTaskPage(WebDriver driver) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(7));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 
 	public void waitForPageLoad() {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -46,6 +59,13 @@ public class CreateNewTaskPage {
 			System.out.println("Вводим заголовок задачи " + text);
 		} catch (TimeoutException e) {
 			waitForPageLoad();
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			throw new NoSuchElementException("Не удалось найти поле 'Заголовок'", e);
 		}
 	}
@@ -61,6 +81,13 @@ public class CreateNewTaskPage {
 		} catch (TimeoutException e) {
 			System.err.println("Поле описания не доступно");
 			waitForPageLoad();
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			throw new NoSuchElementException("Не удалось найти редактор описания", e);
 		}
 	}
@@ -83,10 +110,24 @@ public class CreateNewTaskPage {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 		}
 
 		var windows = driver.getWindowHandles();
 		if (windows.size() < index + 1) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			throw new NoSuchElementException("Не открылась новая вкладка после клика");
 		}
 

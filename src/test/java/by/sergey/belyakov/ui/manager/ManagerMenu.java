@@ -1,14 +1,20 @@
 package by.sergey.belyakov.ui.manager;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class ManagerMenu {
@@ -36,6 +42,14 @@ public class ManagerMenu {
 		try {
 			return wait.until(ExpectedConditions.visibilityOfElementLocated(createButton)).isDisplayed();
 		} catch (Exception e) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			return false;
 		}
 	}
@@ -49,6 +63,13 @@ public class ManagerMenu {
 		} catch (TimeoutException e) {
 			log.error("Опция 'Новая задача' не найдена", e);
 			System.err.println("Опция 'Новая задача' не найдена");
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 		}
 	}
 
@@ -57,6 +78,13 @@ public class ManagerMenu {
 			clickCreate();
 			clickCreateTask();
 		} catch (Exception e) {
+			TakesScreenshot screenshot = ((TakesScreenshot) driver);
+			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+			try {
+				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+			} catch (IOException exception) {
+				System.err.println(exception.getMessage());
+			}
 			throw new RuntimeException("Ошибка при создании новой задачи");
 		}
 	}
