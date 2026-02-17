@@ -8,18 +8,13 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
-public class LoginPage {
-
-	private WebDriver driver;
-	private WebDriverWait wait;
+public class LoginPage extends BasePageUI {
 
 	private By usernameField = By.xpath("//input[@name='username']");
 	private By passwordField = By.xpath("//input[@name='password']");
@@ -29,8 +24,7 @@ public class LoginPage {
 
 
 	public LoginPage(WebDriver driver) {
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		super(driver);
 	}
 
 	public void enterUsername(String username) {

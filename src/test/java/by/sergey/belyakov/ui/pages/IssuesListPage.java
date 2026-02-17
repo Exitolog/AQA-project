@@ -9,25 +9,20 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
-public class IssuesListPage {
+public class IssuesListPage extends BasePageUI{
 
-	private WebDriver driver;
-	private WebDriverWait  wait;
 	private By moreOptionsButton = By.cssSelector("button[aria-label='Показать больше']");
 	private By deleteButtonLocator = By.xpath("//span[text()= 'Удалить задачу']");
 	private By confirmDeleteButton = By.xpath("//span[text()='Удалить']");
 
 	public IssuesListPage(WebDriver driver) {
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		super(driver);
 	}
 
 	private By issueRowByHeaderText(String header) {

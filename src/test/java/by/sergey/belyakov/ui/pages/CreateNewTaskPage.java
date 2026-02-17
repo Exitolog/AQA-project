@@ -11,27 +11,21 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Slf4j
-public class CreateNewTaskPage {
-
-	private WebDriver driver;
-	private WebDriverWait wait;
+public class CreateNewTaskPage extends BasePageUI  {
 
 	private By headerField = By.cssSelector("textarea[data-test='summary']");
 	private By descriptionField = By.cssSelector("div[data-test='wysiwyg-editor-content']");
 	private By createButton = By.cssSelector("button[data-test='submit-button']");
 
 	public CreateNewTaskPage(WebDriver driver) {
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		super(driver);
 	}
 
 	public void enterHeader(String text) {
