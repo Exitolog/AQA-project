@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
+
 @Slf4j
 public class IssuesListPage extends BasePageUI{
 
@@ -34,13 +36,7 @@ public class IssuesListPage extends BasePageUI{
 			wait.until(ExpectedConditions.visibilityOfElementLocated(issueRowByHeaderText(summary)));
 			return true;
 		} catch (Exception e) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			log.error("Задача с заголовком '{}' не найдена ", summary);
 			return false;
 		}
@@ -72,13 +68,7 @@ public class IssuesListPage extends BasePageUI{
 			confirmDeleteTask.click();
 
 		} catch (Exception ex) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			log.error("Ошибка при ожидании потоком");
 		}
 	}

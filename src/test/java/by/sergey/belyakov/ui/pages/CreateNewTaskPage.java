@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
+
 @Slf4j
 public class CreateNewTaskPage extends BasePageUI  {
 
@@ -34,13 +36,7 @@ public class CreateNewTaskPage extends BasePageUI  {
 			header.clear();
 			header.sendKeys(text);
 		} catch (TimeoutException e) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
-			}
+			createScreenshot(driver);
 			throw new NoSuchElementException("Не удалось найти поле 'Заголовок'", e);
 		}
 	}
@@ -53,13 +49,7 @@ public class CreateNewTaskPage extends BasePageUI  {
 			field.sendKeys(text);
 		} catch (TimeoutException e) {
 			log.error("Поле описания не доступно");
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			throw new NoSuchElementException("Не удалось найти редактор описания", e);
 		}
 	}
@@ -79,13 +69,7 @@ public class CreateNewTaskPage extends BasePageUI  {
 	public void switchToNewTab(Integer index) {
 		Set<String> windows = driver.getWindowHandles();
 		if (windows.size() < index + 1) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			throw new NoSuchElementException("Не открылась новая вкладка после клика");
 		}
 

@@ -1,4 +1,4 @@
-package by.sergey.belyakov.ui.utills;
+package by.sergey.belyakov.utills;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

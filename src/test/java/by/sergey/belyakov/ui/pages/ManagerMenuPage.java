@@ -1,18 +1,13 @@
 package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
 
 @Slf4j
 public class ManagerMenuPage extends BasePageUI {
@@ -34,13 +29,7 @@ public class ManagerMenuPage extends BasePageUI {
 		try {
 			return wait.until(ExpectedConditions.visibilityOfElementLocated(createButton)).isDisplayed();
 		} catch (Exception e) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			return false;
 		}
 	}
@@ -51,13 +40,7 @@ public class ManagerMenuPage extends BasePageUI {
 			taskButton.click();
 		} catch (TimeoutException e) {
 			log.error("Опция 'Новая задача' не найдена", e);
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
-			}
+			createScreenshot(driver);
 		}
 	}
 
@@ -66,13 +49,7 @@ public class ManagerMenuPage extends BasePageUI {
 			clickCreate();
 			clickCreateTask();
 		} catch (Exception e) {
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				System.err.println(exception.getMessage());
-			}
+			createScreenshot(driver);
 			throw new RuntimeException("Ошибка при создании новой задачи");
 		}
 	}

@@ -1,4 +1,4 @@
-package by.sergey.belyakov.ui.utills;
+package by.sergey.belyakov.utills;
 
 public class FilePathList {
 

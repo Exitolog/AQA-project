@@ -1,6 +1,6 @@
 package by.sergey.belyakov.ui.tests;
 
-import by.sergey.belyakov.ui.utills.CredentialsReader;
+import by.sergey.belyakov.utills.CredentialsReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
 
-import static by.sergey.belyakov.ui.utills.FilePathList.filePathToBaseCredentialsForLogin;
+import static by.sergey.belyakov.utills.FilePathList.filePathToBaseCredentialsForLogin;
 
 public class BaseTestUI {
 

@@ -1,17 +1,12 @@
 package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
 
 @Slf4j
 public class LoginPage extends BasePageUI {
@@ -53,25 +48,13 @@ public class LoginPage extends BasePageUI {
 			return true;
 		} catch (Exception e) {
 			boolean errorAppeared = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).isDisplayed();
-			TakesScreenshot screenshot = ((TakesScreenshot) driver);
-			File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-			try {
-				FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-			} catch (IOException exception) {
-				log.error(exception.getMessage());
-			}
+			createScreenshot(driver);
 			if (errorAppeared) {
 				log.error("Обнаружено сообщение об ошибке: Некорректное имя пользователя или пароль.");
 				return false;
 			}
 		}
-		TakesScreenshot screenshot = ((TakesScreenshot) driver);
-		File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-		try {
-			FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
-		} catch (IOException exception) {
-			log.error(exception.getMessage());
-		}
+		createScreenshot(driver);
 		throw new RuntimeException("Ошибка при попытке входа в систему!");
 	}
 }
