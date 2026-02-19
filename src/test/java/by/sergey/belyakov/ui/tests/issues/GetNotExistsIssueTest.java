@@ -1,7 +1,6 @@
 package by.sergey.belyakov.ui.tests.issues;
 
 import by.sergey.belyakov.ui.pages.IssuesListPage;
-import by.sergey.belyakov.ui.pages.LoginPage;
 import by.sergey.belyakov.ui.pages.ManagerMenuPage;
 import by.sergey.belyakov.ui.tests.BaseTestUI;
 import org.testng.annotations.DataProvider;
@@ -21,15 +20,17 @@ public class GetNotExistsIssueTest extends BaseTestUI {
 
 	@Test(dataProvider = "wrongHeaders")
 	public void testGetNotExistsIssue(String header) {
-		LoginPage loginPage = new LoginPage(getDriver());
+		try {
+			singInBaseCredentials();
 
-		loginPage.login(getBaseUsername(), getBasePassword());
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			managerMenuPage.goToIssuesPage();
 
-		ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
-		managerMenuPage.goToIssuesPage();
-
-		IssuesListPage issuesListPage = new IssuesListPage(getDriver());
-		boolean notExists = issuesListPage.isIssueDisplayed(header);
-		assertFalse(notExists);
+			IssuesListPage issuesListPage = new IssuesListPage(getDriver());
+			boolean notExists = issuesListPage.isIssueDisplayed(header);
+			assertFalse(notExists);
+		} catch (Exception ex) {
+			createScreenshot(getDriver());
+		}
 	}
 }

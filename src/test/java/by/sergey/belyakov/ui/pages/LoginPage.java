@@ -4,9 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
 
 @Slf4j
 public class LoginPage extends BasePageUI {
@@ -14,7 +11,6 @@ public class LoginPage extends BasePageUI {
 	private By usernameField = By.xpath("//input[@name='username']");
 	private By passwordField = By.xpath("//input[@name='password']");
 	private By loginButtonField = By.xpath("//button[@type='submit']");
-	private By errorMessage = By.xpath("//div[contains(text(), 'Некорректное имя пользователя или пароль')]");
 	private By createButton = By.xpath("//span[text()='Создать']");
 
 
@@ -23,38 +19,30 @@ public class LoginPage extends BasePageUI {
 	}
 
 	public void enterUsername(String username) {
-		WebElement fieldUserName = wait.until(ExpectedConditions.elementToBeClickable(usernameField));
+		WebElement fieldUserName = waitByClickable(usernameField);
 		fieldUserName.clear();
 		fieldUserName.sendKeys(username);
 	}
 
 	public void enterPassword(String password) {
-		WebElement fieldPassword = wait.until(ExpectedConditions.elementToBeClickable(passwordField));
+		WebElement fieldPassword = waitByClickable(passwordField);
 		fieldPassword.clear();
 		fieldPassword.sendKeys(password);
 	}
 
 	public void clickLoginButton() {
-		WebElement buttonLogin = wait.until(ExpectedConditions.elementToBeClickable(loginButtonField));
+		WebElement buttonLogin = waitByClickable(loginButtonField);
 		buttonLogin.click();
 	}
 
-	public boolean login(String username, String password) {
+	public void login(String username, String password) {
 		enterUsername(username);
 		enterPassword(password);
 		clickLoginButton();
 		try {
-			wait.until(ExpectedConditions.elementToBeClickable(createButton));
-			return true;
+			waitByClickable(createButton);
 		} catch (Exception e) {
-			boolean errorAppeared = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).isDisplayed();
-			createScreenshot(driver);
-			if (errorAppeared) {
-				log.error("Обнаружено сообщение об ошибке: Некорректное имя пользователя или пароль.");
-				return false;
-			}
+			throw new RuntimeException("Авторизация не удалась");
 		}
-		createScreenshot(driver);
-		throw new RuntimeException("Ошибка при попытке входа в систему!");
 	}
 }

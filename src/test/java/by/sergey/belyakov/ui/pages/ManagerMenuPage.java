@@ -5,9 +5,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import static by.sergey.belyakov.utills.CreateScreenshotService.createScreenshot;
 
 @Slf4j
 public class ManagerMenuPage extends BasePageUI {
@@ -21,26 +18,24 @@ public class ManagerMenuPage extends BasePageUI {
 	}
 
 	public void clickCreate() {
-		WebElement button = wait.until(ExpectedConditions.elementToBeClickable(createButton));
+		WebElement button = waitByClickable(createButton);
 		button.click();
 	}
 
 	public boolean createButtonIsDisplayed() {
 		try {
-			return wait.until(ExpectedConditions.visibilityOfElementLocated(createButton)).isDisplayed();
+			return waitByVisibility(createButton).isDisplayed();
 		} catch (Exception e) {
-			createScreenshot(driver);
 			return false;
 		}
 	}
 
 	public void clickCreateTask() {
 		try {
-			WebElement taskButton = wait.until(ExpectedConditions.elementToBeClickable(createTaskButton));
+			WebElement taskButton = waitByClickable(createTaskButton);
 			taskButton.click();
 		} catch (TimeoutException e) {
 			log.error("Опция 'Новая задача' не найдена", e);
-			createScreenshot(driver);
 		}
 	}
 
@@ -49,13 +44,12 @@ public class ManagerMenuPage extends BasePageUI {
 			clickCreate();
 			clickCreateTask();
 		} catch (Exception e) {
-			createScreenshot(driver);
 			throw new RuntimeException("Ошибка при создании новой задачи");
 		}
 	}
 
 	public void goToIssuesPage() {
-		WebElement link = wait.until(ExpectedConditions.elementToBeClickable(issuesListLink));
+		WebElement link = waitByClickable(issuesListLink);
 		link.click();
 	}
 }

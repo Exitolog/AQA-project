@@ -1,16 +1,25 @@
 package by.sergey.belyakov.ui.tests;
 
+import by.sergey.belyakov.ui.pages.LoginPage;
 import by.sergey.belyakov.utills.CredentialsReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static by.sergey.belyakov.utills.FilePathList.filePathToBaseCredentialsForLogin;
 
+@Slf4j
 public class BaseTestUI {
 
 	protected ThreadLocal<WebDriver> driver = new ThreadLocal<>();
@@ -36,6 +45,11 @@ public class BaseTestUI {
 		}
 	}
 
+	public void singInBaseCredentials() {
+		LoginPage loginPage = new LoginPage(driver.get());
+		loginPage.login(getBaseUsername(), getBasePassword());
+	}
+
 	public WebDriver getDriver() {
 		return driver.get();
 	}
@@ -50,5 +64,15 @@ public class BaseTestUI {
 
 	public String getBasePassword() {
 		return baseCredentials[1];
+	}
+
+	public void createScreenshot(WebDriver driver) {
+		TakesScreenshot screenshot = ((TakesScreenshot) driver);
+		File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(srcFile, new File("screenshots/screenshot" + LocalDateTime.now() + ".png"));
+		} catch (IOException exception) {
+			log.error(exception.getMessage());
+		}
 	}
 }

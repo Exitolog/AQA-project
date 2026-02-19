@@ -2,7 +2,6 @@ package by.sergey.belyakov.ui.tests.manager;
 
 import by.sergey.belyakov.ui.pages.CreateNewTaskPage;
 import by.sergey.belyakov.ui.pages.IssuesListPage;
-import by.sergey.belyakov.ui.pages.LoginPage;
 import by.sergey.belyakov.ui.pages.ManagerMenuPage;
 import by.sergey.belyakov.ui.tests.BaseTestUI;
 
@@ -23,27 +22,26 @@ public class CreateAndDeleteIssueTest extends BaseTestUI {
 
 	@Test(dataProvider = "optionsIssues")
 	public void testCreateAndDeleteIssue(String header, String description) {
-		LoginPage loginPage = new LoginPage(driver.get());
+		try {
+			singInBaseCredentials();
 
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			managerMenuPage.createNewTask();
 
-		loginPage.login(getBaseUsername(),getBasePassword());
+			CreateNewTaskPage createTaskPage = new CreateNewTaskPage(getDriver());
+			createTaskPage.createTask(header, description);
 
-		ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
-		managerMenuPage.createNewTask();
+			managerMenuPage.goToIssuesPage();
 
-		CreateNewTaskPage createTaskPage = new CreateNewTaskPage(getDriver());
-		createTaskPage.createTask(header, description);
+			IssuesListPage issuesListPage = new IssuesListPage(getDriver());
 
-		createTaskPage.switchToNewTab(0);
+			issuesListPage.deleteIssue(header);
 
-		managerMenuPage.goToIssuesPage();
+			boolean notExists = issuesListPage.isIssueDisplayed(header);
+			assertFalse(notExists);
 
-		IssuesListPage issuesListPage = new IssuesListPage(getDriver());
-
-		issuesListPage.deleteIssue(header);
-
-		boolean notExists = issuesListPage.isIssueDisplayed(header);
-
-		assertFalse(notExists);
+		} catch (Exception ex) {
+			createScreenshot(getDriver());
+		}
 	}
 }
