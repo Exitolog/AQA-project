@@ -5,16 +5,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @Slf4j
 public class IssuesListPage extends BasePageUI{
 
-	private By moreOptionsButton = By.xpath("//span[text()='Показать больше']");
+	private By moreOptionsButton = By.xpath("//button[contains(@aria-label, 'Показать больше')]");
 	private By deleteButtonLocator = By.xpath("//span[text()='Удалить задачу']");
 	private By confirmDeleteButton = By.xpath("//span[text()='Удалить']");
 
-	public IssuesListPage(WebDriver driver) {
+	public IssuesListPage(ThreadLocal<WebDriver> driver) {
 		super(driver);
 	}
 
@@ -23,28 +22,22 @@ public class IssuesListPage extends BasePageUI{
 	}
 
 	public boolean isIssueDisplayed(String summary) {
-		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(issueRowByHeaderText(summary)));
-			return true;
-		} catch (Exception e) {
-			log.error("Задача с заголовком '{}' не найдена ", summary);
-			return false;
-		}
+		 return waitByVisibility(issueRowByHeaderText(summary)).isDisplayed();
 	}
 
 	private void findAndClickIssueInTable(String header) {
-		WebElement row =waitByVisibility(issueRowByHeaderText(header));
-		new Actions(driver).moveToElement(row).click().perform();
+		WebElement row = waitByVisibility(issueRowByHeaderText(header));
+		new Actions(getDriver()).moveToElement(row).click().perform();
 	}
 
 	private void findAndClickMoreOptionsInIssue() {
-		WebElement moreOptions = waitByVisibility(this.moreOptionsButton);
+		WebElement moreOptions = waitByClickable(moreOptionsButton);
 		moreOptions.click();
 	}
 
 	private void clickDeleteButtonAndConfirm() {
 		WebElement deleteButton = waitByClickable(deleteButtonLocator);
-		new Actions(driver).moveToElement(deleteButton).click().perform();
+		new Actions(getDriver()).moveToElement(deleteButton).click().perform();
 
 		WebElement confirmDeleteTask = waitByClickable(confirmDeleteButton);
 		confirmDeleteTask.click();
@@ -52,8 +45,8 @@ public class IssuesListPage extends BasePageUI{
 
 	public void deleteIssue(String header){
 		try {
+			reloadPage();
 			findAndClickIssueInTable(header);
-			switchToNewTab(1);
 			findAndClickMoreOptionsInIssue();
 			clickDeleteButtonAndConfirm();
 		} catch (Exception ex) {

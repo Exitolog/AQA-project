@@ -17,13 +17,17 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+
 import static by.sergey.belyakov.utills.FilePathList.filePathToBaseCredentialsForLogin;
+import static by.sergey.belyakov.utills.FilePathList.filePathToBaseIssueInfo;
+
 
 @Slf4j
 public class BaseTestUI {
 
 	protected ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 	protected String[] baseCredentials;
+	protected String[] baseIssueInfo;
 
 	@BeforeMethod
 	public void setUp()  {
@@ -35,6 +39,7 @@ public class BaseTestUI {
 		webDriver.get("http://localhost:8080");
 		driver.set(webDriver);
 		this.baseCredentials = getBaseCredentialsForLogin();
+		this.baseIssueInfo = getBaseIssueInfo();
 	}
 
 	@AfterMethod
@@ -46,7 +51,7 @@ public class BaseTestUI {
 	}
 
 	public void singInBaseCredentials() {
-		LoginPage loginPage = new LoginPage(driver.get());
+		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(getBaseUsername(), getBasePassword());
 	}
 
@@ -58,12 +63,24 @@ public class BaseTestUI {
 		return CredentialsReader.getCredentials(filePathToBaseCredentialsForLogin);
 	}
 
+	public String[] getBaseIssueInfo() {
+		return CredentialsReader.getCredentials(filePathToBaseIssueInfo);
+	}
+
 	public String getBaseUsername() {
 		return baseCredentials[0];
 	}
 
 	public String getBasePassword() {
 		return baseCredentials[1];
+	}
+
+	public String getBaseHeaderIssue() {
+		return baseIssueInfo[0];
+	}
+
+	public String getBaseDescriptionIssue() {
+		return baseIssueInfo[1];
 	}
 
 	public void createScreenshot(WebDriver driver) {
