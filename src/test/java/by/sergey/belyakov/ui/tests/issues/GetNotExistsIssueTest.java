@@ -23,10 +23,10 @@ public class GetNotExistsIssueTest extends BaseTestUI {
 		try {
 			singInBaseCredentials();
 
-			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			managerMenuPage.goToIssuesPage();
 
-			IssuesListPage issuesListPage = new IssuesListPage(getDriver());
+			IssuesListPage issuesListPage = new IssuesListPage(driver);
 			boolean notExists = issuesListPage.isIssueDisplayed(header);
 			assertFalse(notExists);
 		} catch (Exception ex) {

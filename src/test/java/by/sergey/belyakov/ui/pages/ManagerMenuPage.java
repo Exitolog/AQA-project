@@ -13,7 +13,7 @@ public class ManagerMenuPage extends BasePageUI {
 	private By createTaskButton = By.xpath("//a[@href='newIssue' and text()='Новая задача']");
 	private By issuesListLink = By.xpath("//a[@href='issues']");
 
-	public ManagerMenuPage(WebDriver driver) {
+	public ManagerMenuPage(ThreadLocal<WebDriver> driver) {
 		super(driver);
 	}
 

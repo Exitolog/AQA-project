@@ -25,9 +25,9 @@ public class AuthFailureTest extends BaseTestUI {
 	@Test(dataProvider = "wrongCredentials")
 	public void testAuthFailure(String username, String wrongPass) {
 		try {
-			LoginPage loginPage = new LoginPage(getDriver());
+			LoginPage loginPage = new LoginPage(driver);
 			loginPage.login(username, wrongPass);
-			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			assertFalse(managerMenuPage.createButtonIsDisplayed());
 		} catch (Exception ex) {
 			createScreenshot(getDriver());

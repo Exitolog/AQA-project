@@ -12,7 +12,7 @@ public class AuthSuccessTest extends BaseTestUI {
 	public void testAuthSuccess() {
 		try {
 			singInBaseCredentials();
-			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver.get());
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			assertTrue(managerMenuPage.createButtonIsDisplayed());
 		} catch (Exception ex) {
 			createScreenshot(getDriver());

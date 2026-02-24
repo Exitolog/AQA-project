@@ -7,6 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 @Slf4j
 public class CreateNewTaskPage extends BasePageUI  {
@@ -14,8 +15,9 @@ public class CreateNewTaskPage extends BasePageUI  {
 	private By headerField = By.xpath("//textarea[@data-test='summary']");
 	private By descriptionField = By.xpath("//div[@data-test='wysiwyg-editor-content']");
 	private By createButton = By.xpath("//button[@data-test='submit-button']");
+	private By moreOptionsButton = By.xpath("//span[text()='Показать больше']");
 
-	public CreateNewTaskPage(WebDriver driver) {
+	public CreateNewTaskPage(ThreadLocal<WebDriver> driver) {
 		super(driver);
 	}
 
@@ -42,16 +44,17 @@ public class CreateNewTaskPage extends BasePageUI  {
 
 	public void clickCreate() {
 		WebElement button = waitByClickable(createButton);
-		button.click();
+		new Actions(getDriver()).moveToElement(button).click().perform();
 	}
 
 	public void createTask(String header, String description) {
-		switchToNewTab(1);
+		switchToTabByUrl("http://localhost:8080/newIssue");
 		enterHeader(header);
 		enterDescription(description);
 		clickCreate();
-		switchToNewTab(0);
 	}
 
 }
+
+
 

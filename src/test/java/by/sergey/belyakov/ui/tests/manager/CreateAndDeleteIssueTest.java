@@ -5,35 +5,31 @@ import by.sergey.belyakov.ui.pages.IssuesListPage;
 import by.sergey.belyakov.ui.pages.ManagerMenuPage;
 import by.sergey.belyakov.ui.tests.BaseTestUI;
 
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 
 public class CreateAndDeleteIssueTest extends BaseTestUI {
 
-	@DataProvider(name = "optionsIssues", parallel = true)
-	public Object[][] dataProviderMethodForNewIssues() {
-		return new Object[][] {
-				{"Первый заголовок", "Первое описание"},
-				{ "Второй заголовок","Второе описание"},
-				{ "Третий заголовок","Третье описание"}};
-	}
 
-	@Test(dataProvider = "optionsIssues")
-	public void testCreateAndDeleteIssue(String header, String description) {
+	@Test
+	public void testCreateAndDeleteIssue() {
 		try {
 			singInBaseCredentials();
 
-			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			String header = getBaseHeaderIssue();
+
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			managerMenuPage.createNewTask();
 
-			CreateNewTaskPage createTaskPage = new CreateNewTaskPage(getDriver());
-			createTaskPage.createTask(header, description);
+			CreateNewTaskPage createTaskPage = new CreateNewTaskPage(driver);
+			createTaskPage.createTask(header, getBaseDescriptionIssue());
+
+			createTaskPage.switchToTabByUrl("http://localhost:8080/dashboard");
 
 			managerMenuPage.goToIssuesPage();
 
-			IssuesListPage issuesListPage = new IssuesListPage(getDriver());
+			IssuesListPage issuesListPage = new IssuesListPage(driver);
 
 			issuesListPage.deleteIssue(header);
 

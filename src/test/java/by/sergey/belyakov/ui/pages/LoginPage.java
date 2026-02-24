@@ -14,7 +14,7 @@ public class LoginPage extends BasePageUI {
 	private By createButton = By.xpath("//span[text()='Создать']");
 
 
-	public LoginPage(WebDriver driver) {
+	public LoginPage(ThreadLocal<WebDriver> driver) {
 		super(driver);
 	}
 

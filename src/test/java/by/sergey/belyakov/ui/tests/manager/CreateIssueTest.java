@@ -14,17 +14,20 @@ public class CreateIssueTest extends BaseTestUI {
 	@Test
 	public void testCreateIssue() {
 		try {
+
 			singInBaseCredentials();
 
-			ManagerMenuPage managerMenuPage = new ManagerMenuPage(getDriver());
+			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			managerMenuPage.createNewTask();
 
-			CreateNewTaskPage createTaskPage = new CreateNewTaskPage(getDriver());
+			CreateNewTaskPage createTaskPage = new CreateNewTaskPage(driver);
 			createTaskPage.createTask("Тестовая задача", "Описание задачи");
+
+			createTaskPage.switchToTabByUrl("http://localhost:8080/dashboard");
 
 			managerMenuPage.goToIssuesPage();
 
-			IssuesListPage issuesListPage = new IssuesListPage(getDriver());
+			IssuesListPage issuesListPage = new IssuesListPage(driver);
 			boolean exists = issuesListPage.isIssueDisplayed("Тестовая задача");
 			assertTrue(exists);
 
