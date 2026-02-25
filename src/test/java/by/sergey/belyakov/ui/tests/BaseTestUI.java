@@ -9,6 +9,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -43,8 +44,11 @@ public class BaseTestUI {
 	}
 
 	@AfterMethod
-	public void commonAfterMethod()  {
-		createScreenshot(getDriver());
+	public void commonAfterMethod(ITestResult result)  {
+		if (result.getStatus() == ITestResult.FAILURE) {
+			createScreenshot(getDriver());
+		}
+
 		if (driver.get() != null) {
 			driver.get().quit();
 			driver.remove();
