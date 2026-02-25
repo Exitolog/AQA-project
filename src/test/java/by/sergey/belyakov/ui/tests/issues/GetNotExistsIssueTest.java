@@ -20,17 +20,12 @@ public class GetNotExistsIssueTest extends BaseTestUI {
 
 	@Test(dataProvider = "wrongHeaders")
 	public void testGetNotExistsIssue(String header) {
-		try {
 			singInBaseCredentials();
-
 			ManagerMenuPage managerMenuPage = new ManagerMenuPage(driver);
 			managerMenuPage.goToIssuesPage();
-
 			IssuesListPage issuesListPage = new IssuesListPage(driver);
 			boolean notExists = issuesListPage.isIssueDisplayed(header);
 			assertFalse(notExists);
-		} catch (Exception ex) {
-			createScreenshot(getDriver());
-		}
+
 	}
 }

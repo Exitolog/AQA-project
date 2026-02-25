@@ -2,6 +2,7 @@ package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -22,7 +23,11 @@ public class IssuesListPage extends BasePageUI{
 	}
 
 	public boolean isIssueDisplayed(String summary) {
-		 return waitByVisibility(issueRowByHeaderText(summary)).isDisplayed();
+		try {
+			return waitByVisibility(issueRowByHeaderText(summary)).isDisplayed();
+		} catch (Exception exception) {
+			throw new TimeoutException("Задача не найдена в списке с заголовком " + summary);
+		}
 	}
 
 	private void findAndClickIssueInTable(String header) {
@@ -50,7 +55,7 @@ public class IssuesListPage extends BasePageUI{
 			findAndClickMoreOptionsInIssue();
 			clickDeleteButtonAndConfirm();
 		} catch (Exception ex) {
-			log.error("Ошибка при удалении задачи {}", header);
+			throw new RuntimeException("Ошибка при удалении задачи с заголовком " + header);
 		}
 	}
 }

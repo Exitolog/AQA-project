@@ -7,7 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+
 
 @Slf4j
 public class CreateNewTaskPage extends BasePageUI  {
@@ -44,7 +44,7 @@ public class CreateNewTaskPage extends BasePageUI  {
 
 	public void clickCreate() {
 		WebElement button = waitByClickable(createButton);
-		new Actions(getDriver()).moveToElement(button).click().perform();
+		button.click();
 	}
 
 	public void createTask(String header, String description) {

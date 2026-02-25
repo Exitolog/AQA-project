@@ -43,7 +43,8 @@ public class BaseTestUI {
 	}
 
 	@AfterMethod
-	public void closeBrowser()  {
+	public void commonAfterMethod()  {
+		createScreenshot(getDriver());
 		if (driver.get() != null) {
 			driver.get().quit();
 			driver.remove();

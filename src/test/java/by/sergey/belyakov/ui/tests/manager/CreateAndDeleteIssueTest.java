@@ -14,7 +14,6 @@ public class CreateAndDeleteIssueTest extends BaseTestUI {
 
 	@Test
 	public void testCreateAndDeleteIssue() {
-		try {
 			singInBaseCredentials();
 
 			String header = getBaseHeaderIssue();
@@ -35,9 +34,5 @@ public class CreateAndDeleteIssueTest extends BaseTestUI {
 
 			boolean notExists = issuesListPage.isIssueDisplayed(header);
 			assertFalse(notExists);
-
-		} catch (Exception ex) {
-			createScreenshot(getDriver());
-		}
 	}
 }
