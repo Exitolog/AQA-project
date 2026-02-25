@@ -15,7 +15,6 @@ import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 
@@ -36,7 +35,6 @@ public class BaseTestUI {
 		WebDriverManager.chromedriver().setup();
 		WebDriver webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();
-		webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(12));
 		webDriver.get("http://localhost:8080");
 		driver.set(webDriver);
 		this.baseCredentials = getBaseCredentialsForLogin();

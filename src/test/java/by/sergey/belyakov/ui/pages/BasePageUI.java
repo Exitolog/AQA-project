@@ -25,7 +25,6 @@ public class BasePageUI {
 	}
 
 	public void switchToTabByUrl(String expectedUrl) {
-		WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(20));
 		wait.until(d -> {
 			for (String handle : d.getWindowHandles()) {
 				d.switchTo().window(handle);
