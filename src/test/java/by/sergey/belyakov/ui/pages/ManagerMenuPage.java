@@ -2,9 +2,7 @@ package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 @Slf4j
 public class ManagerMenuPage extends BasePageUI {
@@ -18,8 +16,7 @@ public class ManagerMenuPage extends BasePageUI {
 	}
 
 	public void clickCreate() {
-		WebElement button = waitByClickable(createButton);
-		button.click();
+		click(createButton);
 	}
 
 	public boolean createButtonIsDisplayed() {
@@ -31,25 +28,15 @@ public class ManagerMenuPage extends BasePageUI {
 	}
 
 	public void clickCreateTask() {
-		try {
-			WebElement taskButton = waitByClickable(createTaskButton);
-			taskButton.click();
-		} catch (TimeoutException e) {
-			log.error("Опция 'Новая задача' не найдена", e);
-		}
+		click(createTaskButton);
 	}
 
 	public void createNewTask() {
-		try {
 			clickCreate();
 			clickCreateTask();
-		} catch (Exception e) {
-			throw new RuntimeException("Ошибка при создании новой задачи");
-		}
 	}
 
 	public void goToIssuesPage() {
-		WebElement link = waitByClickable(issuesListLink);
-		link.click();
+		click(issuesListLink);
 	}
 }

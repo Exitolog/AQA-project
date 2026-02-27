@@ -3,10 +3,7 @@ package by.sergey.belyakov.ui.pages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 
 @Slf4j
@@ -22,29 +19,15 @@ public class CreateNewTaskPage extends BasePageUI  {
 	}
 
 	public void enterHeader(String text) {
-		try {
-			WebElement header = waitByVisibility(headerField);
-			header.clear();
-			header.sendKeys(text);
-		} catch (TimeoutException e) {
-			throw new NoSuchElementException("Не удалось найти поле 'Заголовок'", e);
-		}
+		enterText(headerField, text);
 	}
 
 	public void enterDescription(String text) {
-		try {
-			WebElement field = waitByVisibility(descriptionField);
-			field.click();
-			field.clear();
-			field.sendKeys(text);
-		} catch (TimeoutException e) {
-			throw new NoSuchElementException("Не удалось найти поле описания", e);
-		}
+		enterText(descriptionField, text);
 	}
 
 	public void clickCreate() {
-		WebElement button = waitByClickable(createButton);
-		button.click();
+		click(createButton);
 	}
 
 	public void createTask(String header, String description) {

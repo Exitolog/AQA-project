@@ -3,7 +3,6 @@ package by.sergey.belyakov.ui.pages;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 @Slf4j
 public class LoginPage extends BasePageUI {
@@ -19,20 +18,15 @@ public class LoginPage extends BasePageUI {
 	}
 
 	public void enterUsername(String username) {
-		WebElement fieldUserName = waitByClickable(usernameField);
-		fieldUserName.clear();
-		fieldUserName.sendKeys(username);
+		enterText(usernameField, username);
 	}
 
 	public void enterPassword(String password) {
-		WebElement fieldPassword = waitByClickable(passwordField);
-		fieldPassword.clear();
-		fieldPassword.sendKeys(password);
+		enterText(passwordField, password);
 	}
 
 	public void clickLoginButton() {
-		WebElement buttonLogin = waitByClickable(loginButtonField);
-		buttonLogin.click();
+		click(loginButtonField);
 	}
 
 	public void login(String username, String password) {

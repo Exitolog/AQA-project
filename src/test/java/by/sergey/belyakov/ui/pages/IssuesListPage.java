@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 @Slf4j
 public class IssuesListPage extends BasePageUI{
@@ -31,31 +29,23 @@ public class IssuesListPage extends BasePageUI{
 	}
 
 	private void findAndClickIssueInTable(String header) {
-		WebElement row = waitByVisibility(issueRowByHeaderText(header));
-		new Actions(getDriver()).moveToElement(row).click().perform();
+		click(issueRowByHeaderText(header));
 	}
 
 	private void findAndClickMoreOptionsInIssue() {
-		WebElement moreOptions = waitByClickable(moreOptionsButton);
-		moreOptions.click();
+		click(moreOptionsButton);
 	}
 
 	private void clickDeleteButtonAndConfirm() {
-		WebElement deleteButton = waitByClickable(deleteButtonLocator);
-		new Actions(getDriver()).moveToElement(deleteButton).click().perform();
+		click(deleteButtonLocator);
+		click(confirmDeleteButton);
 
-		WebElement confirmDeleteTask = waitByClickable(confirmDeleteButton);
-		confirmDeleteTask.click();
 	}
 
 	public void deleteIssue(String header){
-		try {
 			reloadPage();
 			findAndClickIssueInTable(header);
 			findAndClickMoreOptionsInIssue();
 			clickDeleteButtonAndConfirm();
-		} catch (Exception ex) {
-			throw new RuntimeException("Ошибка при удалении задачи с заголовком " + header);
-		}
 	}
 }
