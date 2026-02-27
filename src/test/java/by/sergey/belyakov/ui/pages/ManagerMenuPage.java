@@ -20,11 +20,7 @@ public class ManagerMenuPage extends BasePageUI {
 	}
 
 	public boolean createButtonIsDisplayed() {
-		try {
 			return waitByVisibility(createButton).isDisplayed();
-		} catch (Exception e) {
-			return false;
-		}
 	}
 
 	public void clickCreateTask() {
